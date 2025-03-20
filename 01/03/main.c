@@ -1,5 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+
+  
+
 
 // Definition der Matrix-Struktur
 typedef struct {
@@ -29,11 +34,22 @@ void Init(Matrix *mat, int rows, int cols) {
 void Print(Matrix *mat) {
     for (int i = 0; i < mat->rows; i++) {
         for (int j = 0; j < mat->cols; j++) {
-            printf("%d ", mat->data[i][j]);
+            printf(" %d ", mat->data[i][j]);
         }
         printf("\n");
     }
 }
+
+
+// Funktion um die Matrix mit random Zahlen zu füllen
+void RandomFill(Matrix *mat){
+    for (int i = 0; i < mat->rows; i++) {
+        for (int j = 0; j < mat->cols; j++) {
+            mat->data[i][j] = rand() % 10;
+        }
+    }
+}
+
 
 // Funktion zur Eingabe der Matrix
 void Input(Matrix *mat) {
@@ -46,6 +62,39 @@ void Input(Matrix *mat) {
     }
 }
 
+
+int Add(Matrix *m1, Matrix *m2, Matrix *m3){
+
+    if(!(m1->rows == m2->rows && m1->cols == m2->cols)){
+        printf("Matrizen nicht gleich groß!");
+        return 0;
+    }
+
+    for (int i = 0; i < m1->rows; i++) {
+        for (int j = 0; j < m1->cols; j++) {
+            m3->data[i][j] = m1->data[i][j] + m2->data[i][j];
+        }
+    }
+}
+
+
+int Mult(Matrix *m1, Matrix *m2, Matrix *m3){
+
+    if(!(m1->rows == m2->cols)){
+        printf("Spaltenzahl von Matrix1 nicht gleich Zeilenzahl von Matrix2!");
+        return 0;
+    }
+
+    for (int i = 0; i < m1->rows; i++) {
+        for (int j = 0; j < m2->cols; j++) {
+            for (int k = 0; k < m1->cols; k++) {
+                m3->data[i][j] += m1->data[i][k] * m2->data[k][j];
+            }
+        }
+    }
+}
+
+
 // Funktion zur Freigabe des Speichers
 void FreeMatrix(Matrix *mat) {
     for (int i = 0; i < mat->rows; i++) {
@@ -55,27 +104,36 @@ void FreeMatrix(Matrix *mat) {
 }
 
 int main() {
-    Matrix mat;
-    int rows, cols;
+    srand(time(NULL));
 
-    // Abfrage der Dimensionen der Matrix
-    printf("Geben Sie die Anzahl der Zeilen ein: ");
-    scanf("%d", &rows);
-    printf("Geben Sie die Anzahl der Spalten ein: ");
-    scanf("%d", &cols);
+    int rows = 5;
+    int cols = 4;
 
-    // Initialisierung der Matrix
-    Init(&mat, rows, cols);
+    Matrix mat1;
+    Matrix mat2;
+    Matrix mat3;
 
-    // Eingabe der Matrix
-    Input(&mat);
+    Init(&mat1, rows, cols);
+    Init(&mat2, rows, cols);
+    Init(&mat3, rows, cols);
 
-    // Ausgabe der Matrix
-    printf("Die eingegebene Matrix ist:\n");
-    Print(&mat);
+    RandomFill(&mat1);
+    RandomFill(&mat2);
 
-    // Freigabe des Speichers
-    FreeMatrix(&mat);
+    Print(&mat1); printf("\n");
+    Print(&mat2); printf("\n");
+
+    Add(&mat1, &mat2, &mat3);
+
+    Print(&mat3); printf("\n");
+
+    Mult(&mat1, &mat2, &mat3);
+
+    Print(&mat3);
+
+    FreeMatrix(&mat1);
+    FreeMatrix(&mat2);
+    FreeMatrix(&mat3);
 
     return 0;
 }
