@@ -1,0 +1,9 @@
+NOP
+MOV $20 7
+MOV $0 0
+CMP 7 0
+JPF 8
+ADD $1 0
+JMP 4
+DEL 0
+NOP
